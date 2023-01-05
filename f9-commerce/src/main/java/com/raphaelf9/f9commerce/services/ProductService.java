@@ -3,6 +3,7 @@ package com.raphaelf9.f9commerce.services;
 import com.raphaelf9.f9commerce.dto.ProductDTO;
 import com.raphaelf9.f9commerce.entities.Product;
 import com.raphaelf9.f9commerce.repositories.ProductRepository;
+import com.raphaelf9.f9commerce.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +20,10 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id){
-        Product product = repository.findById(id).get();
-        return new ProductDTO(product);
+            Product product = repository
+                    .findById(id)
+                    .orElseThrow(()->new ResourceNotFoundException("Recurso não encontrado!"));
+            return new ProductDTO(product);
 
     }
 
